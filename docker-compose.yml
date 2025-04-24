@@ -1,11 +1,20 @@
-version: "3"
+version: "3.8"
+
 services:
-   appsmith:
-     image: index.docker.io/appsmith/appsmith-ee
-     container_name: appsmith
-     ports:
-         - "80:80"
-         - "443:443"
-     volumes:
-         - ./stacks:/appsmith-stacks
-     restart: unless-stopped
+  appsmith:
+    image: index.docker.io/appsmith/appsmith-ee:latest
+    container_name: appsmith
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - appsmith_stacks:/appsmith-stacks
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  appsmith_stacks:
